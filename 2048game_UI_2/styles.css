@@ -79,6 +79,10 @@ body {
     display: none; /* 初期状態では非表示 */
 }
 
+#retry-btn-end {
+    display: block;
+}
+
 .retry-button:hover {
     background-color: #f55e4b; /* ホバー時の色変更 */
 }
@@ -90,7 +94,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px; /* 数字のフォントサイズ */
+    font-size: 50px; /* 数字のフォントサイズ */
     font-weight: bold;
     border-radius: 5px;
     position: absolute;
@@ -100,7 +104,7 @@ body {
 
 /* 各数字タイルの色設定 */
 .tile-2 {
-    background-color: #eee4da; /* 2のタイルの色 */
+    background-color: #ffea84; /* 2のタイルの色 */
 }
 .tile-4 {
     background-color: #ede0c8; /* 4のタイルの色 */
@@ -131,4 +135,24 @@ body {
 }
 .tile-2048 {
     background-color: #edc22e; /* 2048のタイルの色 */
+}
+
+.end-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: none; /* 最初は非表示 */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 10;
+    background-color: rgba(220,220,220,0.8);
+}
+
+.end-message {
+    font-size: 32px;
+    margin-bottom: 100px;
 }

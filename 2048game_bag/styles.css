@@ -1,0 +1,158 @@
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f2e8db;
+}
+
+.game-board {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4列に分割 */
+    grid-gap: 10px; /* タイル間の間隔 */
+    background-color: #bbada0;
+    padding: 10px;
+    border-radius: 10px; /* 角を少し丸く */
+}
+
+.tile {
+    width: 100%;
+    height: 100%;
+    background-color: #cdc1b4; /* 初期の背景色 */
+    border-radius: 5px; /* タイルの角を少し丸く */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.game-container {
+    width: fit-content;
+    margin: auto;
+}
+
+.game-title {
+    font-size: 150px; /* タイトルのフォントサイズを大きく */
+    color: #776e65;
+    margin: 0; /* マージンのリセット */
+    margin-bottom: 20px; /* ゲームボードとの間隔 */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.score {
+    font-size: 24px; /* スコアのフォントサイズ */
+    color: #776e65;
+    border: 2px solid #bbada0;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background-color: #f2e8db;
+}
+
+#score-value {
+    margin-left: 10px;
+    color: #776e65;
+}
+
+.retry-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 中央配置のための調整 */
+    font-size: 24px; /* ボタンのフォントサイズ */
+    color: #ffffff;
+    background-color: #f67c5f;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 30px;
+    cursor: pointer;
+    display: none; /* 初期状態では非表示 */
+}
+
+#retry-btn-end {
+    display: block;
+}
+
+.retry-button:hover {
+    background-color: #f55e4b; /* ホバー時の色変更 */
+}
+
+/* 基本的なタイルのスタイル */
+.num-tile {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px; /* 数字のフォントサイズ */
+    font-weight: bold;
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* 各数字タイルの色設定 */
+.tile-2 {
+    background-color: #ffea84; /* 2のタイルの色 */
+}
+.tile-4 {
+    background-color: #ede0c8; /* 4のタイルの色 */
+}
+.tile-8 {
+    background-color: #f2b179; /* 8のタイルの色 */
+}
+.tile-16 {
+    background-color: #f59563; /* 16のタイルの色 */
+}
+.tile-32 {
+    background-color: #f67c5f; /* 32のタイルの色 */
+}
+.tile-64 {
+    background-color: #f65e3b; /* 64のタイルの色 */
+}
+.tile-128 {
+    background-color: #edcf72; /* 128のタイルの色 */
+}
+.tile-256 {
+    background-color: #edcc61; /* 256のタイルの色 */
+}
+.tile-512 {
+    background-color: #edc850; /* 512のタイルの色 */
+}
+.tile-1024 {
+    background-color: #edc53f; /* 1024のタイルの色 */
+}
+.tile-2048 {
+    background-color: #edc22e; /* 2048のタイルの色 */
+}
+
+.end-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: none; /* 最初は非表示 */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 10;
+    background-color: rgba(220,220,220,0.8);
+}
+
+.end-message {
+    font-size: 32px;
+    margin-bottom: 100px;
+}

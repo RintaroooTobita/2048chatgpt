@@ -37,6 +37,11 @@
             <div class="tile"></div>
         </div>
 
+        <div class="volume-control">
+            <label for="volume-slider">Volume:</label>
+            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
+        </div>
+
         <div class="end-screen" id="game-clear-screen">
             <div class="end-message">
                 Game Clear!
@@ -48,6 +53,7 @@
             <button class="retry-button" id="game-over-retry">Retry</button>
         </div>
     </div>
+    <audio id="move-sound" src="./60014__qubodup__swosh-27.mp3"></audio>
     <script src="script.js"></script>
 </body>
 

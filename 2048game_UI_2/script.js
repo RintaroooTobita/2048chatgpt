@@ -64,6 +64,8 @@ class Tile {
     }
 }
 
+let gameState = 'playing';
+
 // ゲームの状態を保存する2D配列 (4x4)
 let board = [
     [null, null, null, null],
@@ -72,8 +74,16 @@ let board = [
     [null, null, null, null]
 ];
 
+let score = 0;
+
+let mergedTiles = [];
+
 // キーボードイベントの処理
 document.addEventListener('keydown', function(event) {
+
+    if (gameState !== 'playing') {
+        return;
+    }
 
     const previousBoard = board.map(row => row.slice());
 
@@ -107,9 +117,11 @@ document.addEventListener('keydown', function(event) {
     });
 
     if (hasChanged) {
+        playMoveSound();
         addRandomTile();
         checkGameStatus();
         if (isGameOver()) {
+            gameState = 'gameOver';
             document.getElementById("game-over-screen").style.display = "flex";
             document.getElementById("game-over-retry").style.display = "block";
         }
@@ -119,14 +131,23 @@ document.addEventListener('keydown', function(event) {
 
 });
 
+function updateScore() {
+    const scoreElement = document.getElementById("score-value");
+    scoreElement.textContent = score;
+}
+
 function combineTiles(direction) {
+    mergedTiles = [];
     switch(direction) {
         case 'UP':
             for(let j = 0; j < 4; j++) {
                 for(let i = 0; i < 3; i++) {
                     if(board[i][j] !== null && board[i+1][j] === board[i][j]) {
+                        mergedTiles.push({x:i,y:j});
                         board[i][j] *= 2;
                         board[i+1][j] = null;
+                        score += board[i][j];
+                        updateScore();
                         i++;  // 同じタイルを複数回結合しないようにするためにインクリメント
                     }
                 }
@@ -136,8 +157,11 @@ function combineTiles(direction) {
             for(let j = 0; j < 4; j++) {
                 for(let i = 3; i > 0; i--) {
                     if(board[i][j] !== null && board[i-1][j] === board[i][j]) {
+                        mergedTiles.push({x:i,y:j});
                         board[i][j] *= 2;
                         board[i-1][j] = null;
+                        score += board[i][j];
+                        updateScore();
                         i--;  // 同じタイルを複数回結合しないようにするためにデクリメント
                     }
                 }
@@ -147,8 +171,11 @@ function combineTiles(direction) {
             for(let i = 0; i < 4; i++) {
                 for(let j = 0; j < 3; j++) {
                     if(board[i][j] !== null && board[i][j+1] === board[i][j]) {
+                        mergedTiles.push({x:i,y:j});
                         board[i][j] *= 2;
                         board[i][j+1] = null;
+                        score += board[i][j];
+                        updateScore();
                         j++;  // 同じタイルを複数回結合しないようにするためにインクリメント
                     }
                 }
@@ -158,8 +185,11 @@ function combineTiles(direction) {
             for(let i = 0; i < 4; i++) {
                 for(let j = 3; j > 0; j--) {
                     if(board[i][j] !== null && board[i][j-1] === board[i][j]) {
+                        mergedTiles.push({x:i,y:j});
                         board[i][j] *= 2;
                         board[i][j-1] = null;
+                        score += board[i][j];
+                        updateScore();
                         j--;  // 同じタイルを複数回結合しないようにするためにデクリメント
                     }
                 }
@@ -179,6 +209,7 @@ function moveTiles(direction) {
                 for(let i = 0; i < 4; i++) {
                     if(board[i][j] !== null) {
                         if(emptyRow !== -1) {
+                            updateMergedTilePosition(i,j,emptyRow,j);
                             board[emptyRow][j] = board[i][j];
                             board[i][j] = null;
                             i = emptyRow;
@@ -196,6 +227,7 @@ function moveTiles(direction) {
                 for(let i = 3; i >= 0; i--) {
                     if(board[i][j] !== null) {
                         if(emptyRow !== -1) {
+                            updateMergedTilePosition(i,j,emptyRow,j);
                             board[emptyRow][j] = board[i][j];
                             board[i][j] = null;
                             i = emptyRow;
@@ -213,6 +245,7 @@ function moveTiles(direction) {
                 for(let j = 0; j < 4; j++) {
                     if(board[i][j] !== null) {
                         if(emptyCol !== -1) {
+                            updateMergedTilePosition(i,j,i,emptyCol);
                             board[i][emptyCol] = board[i][j];
                             board[i][j] = null;
                             j = emptyCol;
@@ -230,6 +263,7 @@ function moveTiles(direction) {
                 for(let j = 3; j >= 0; j--) {
                     if(board[i][j] !== null) {
                         if(emptyCol !== -1) {
+                            updateMergedTilePosition(i,j,i,emptyCol);
                             board[i][emptyCol] = board[i][j];
                             board[i][j] = null;
                             j = emptyCol;
@@ -241,6 +275,16 @@ function moveTiles(direction) {
                 }
             }
             break;
+    }
+}
+
+function updateMergedTilePosition(oldRow, oldCol, newRow, newCol) {
+    for (let i = 0; i < mergedTiles.length; i++) {
+        if (mergedTiles[i].x === oldRow && mergedTiles[i].y === oldCol) {
+            mergedTiles[i].x = newRow;
+            mergedTiles[i].y = newCol;
+            break; // 一致するタイルが見つかったらループを抜ける
+        }
     }
 }
 
@@ -267,6 +311,21 @@ function updateTiles() {
             }
         }
     }
+
+    mergedTiles.forEach(mergedTile => {
+        // gridTilesは全タイル要素の配列
+        const parentTile = gridTiles[mergedTile.x * 4 + mergedTile.y];
+        const tileElement = parentTile.querySelector('.num-tile');
+
+        if (tileElement) {
+            tileElement.classList.add('tile-merged');
+
+            // アニメーション終了後にクラスを削除
+            tileElement.addEventListener('animationend', () => {
+                tileElement.classList.remove('tile-merged');
+            });
+        }
+    });
 }
 
 function isGameClear() {
@@ -284,6 +343,7 @@ function isGameClear() {
 function checkGameStatus() {
     if (isGameClear()) {
         // ゲームクリアの画面を表示
+        gameState = 'gameClear';
         document.getElementById('game-clear-screen').style.display = 'flex';
 
         // タイルの動きやキー入力などを無効にする追加のロジックが必要な場合はここに実装
@@ -317,8 +377,10 @@ function initializeGame() {
     document.getElementById("game-clear-screen").style.display = "none";
 
     // 4. スコアを0にリセットする
+    score = 0;
     const scoreElement = document.getElementById("score-value");
     scoreElement.textContent = '0';
+    gameState = 'playing';
 }
 
 function isGameOver() {
@@ -351,4 +413,20 @@ function isGameOver() {
 document.getElementById("game-over-retry").addEventListener("click", function() {
     document.getElementById("game-over-screen").style.display = "none";
     initializeGame();
+});
+
+//https://freesound.org/people/qubodup/sounds/60014/
+function playMoveSound() {
+    const sound = document.getElementById('move-sound');
+    sound.play();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const volumeSlider = document.getElementById('volume-slider');
+    const audioElement = document.getElementById('move-sound');
+
+    // スライダーの値が変更されたときのイベントリスナーを設定
+    volumeSlider.addEventListener('input', () => {
+        audioElement.volume = volumeSlider.value;
+    });
 });

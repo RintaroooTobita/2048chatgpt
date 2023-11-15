@@ -156,3 +156,23 @@ body {
     font-size: 32px;
     margin-bottom: 100px;
 }
+
+@keyframes tile-merge-animation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.tile-merged {
+    animation: tile-merge-animation 0.5s;
+}
+
+.volume-control {
+    /* スタイリング例 */
+    margin: 10px;
+    text-align: center;
+}
+
+#volume-slider {
+    width: 100%;
+}
